@@ -48,11 +48,46 @@ export const App = () => {
   }
 }, [isRunning, timeLeft, isBreak])
 
+const toggleTimer = () => {
+  setIsRunning(!isRunning)
+}
+
+const resetTimer = () => {
+  setIsRunning(false)
+  setIsBreak(false)
+  setTimeLeft(25 * 60)
+}
+
+const formatTime = (seconds: number) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2,"0")}`
+}
+
+const addTodo = () => {
+  if (newTodo.trim()) {
+    SetTodos([
+      ...todos,{
+        id: Date.now(),
+        text: newTodo.trim(),
+        completed: false
+      },
+    ])
+    setNewTodo("")
+  }
+}
+
 
 
   return (
-    <div>App</div>
+    <main className='min-h-screen relative'>
+      <div className=''>
+
+      </div>
+    </main>
   )
 }
+
+export default App;
 
 
