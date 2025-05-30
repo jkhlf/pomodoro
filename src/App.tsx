@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-
+import { FaBrain, FaCoffee } from 'react-icons/fa';
 type Todo = {
   id: Number
   text: String
@@ -8,54 +8,54 @@ type Todo = {
 
 export const App = () => {
 
-  const [timeLeft, setTimeLeft] = useState(25 * 60)
-  const [isRunning, setIsRunning] = useState(false)
-  const [isBreak, setIsBreak]= useState(false)
-  const [todos, SetTodos] = useState<Todo[]>([
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isBreak, setIsBreak]= useState(false);
+  const [todos, setTodos] = useState<Todo[]>([
     { id: 1, text: "Learn React", completed: false },
     { id: 2, text: "Learn TypeScript", completed: false },
     { id: 3, text: "Build a Pomodoro Timer", completed: false }
-  ])
-  const [newTodo, setNewTodo] = useState("")
-  const [sessions, setSessions] = useState(0)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  ]);
+  const [newTodo, setNewTodo] = useState("");
+  const [sessions, setSessions] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if( isRunning && timeLeft > 0) {
       intervalRef.current = setInterval (() => {
-        setTimeLeft((prev) => prev - 1)
+        setTimeLeft((prev) => prev - 1);
       }, 1000)
     } else if (timeLeft === 0) {
     setIsRunning(false)
       if (!isBreak){
-        setSessions((prev) => prev + 1 )
-        setIsBreak(true)
-        setTimeLeft(5 * 60)
+        setSessions((prev) => prev + 1 );
+        setIsBreak(true);
+        setTimeLeft(5 * 60);
       } else {
-        setIsBreak(false)
-        setTimeLeft(25 * 60)
+        setIsBreak(false);
+        setTimeLeft(25 * 60);
       }
   } else {
     if(intervalRef.current){
-      clearInterval(intervalRef.current)
+      clearInterval(intervalRef.current);
     }
   }
 
   return () => {
     if(intervalRef.current) {
-      clearInterval(intervalRef.current)
+      clearInterval(intervalRef.current);
     }
   }
-}, [isRunning, timeLeft, isBreak])
+}, [isRunning, timeLeft, isBreak]);
 
 const toggleTimer = () => {
-  setIsRunning(!isRunning)
+  setIsRunning(!isRunning);
 }
 
 const resetTimer = () => {
-  setIsRunning(false)
-  setIsBreak(false)
-  setTimeLeft(25 * 60)
+  setIsRunning(false);
+  setIsBreak(false);
+  setTimeLeft(25 * 60);
 }
 
 const formatTime = (seconds: number) => {
@@ -66,23 +66,48 @@ const formatTime = (seconds: number) => {
 
 const addTodo = () => {
   if (newTodo.trim()) {
-    SetTodos([
+    setTodos([
       ...todos,{
         id: Date.now(),
         text: newTodo.trim(),
         completed: false
       },
     ])
-    setNewTodo("")
+    setNewTodo("");
   }
 }
 
+const toggleTodo = (id: number) => {
+  setTodos(todos.map((todo) =>
+    (todo.id === id ?
+      { ... todo, completed: !todo.completed}
+      : todo)));
+}
 
+const deleteTodo = (id: number) => {
+  setTodos(todos.filter((todo) => todo.id !== id));
+}
+
+const completedTodos = todos.filter((todo) => todo.completed).length;
 
   return (
     <main className='min-h-screen relative'>
-      <div className=''>
-
+      <div className='relative z-10 container mx-auto px-4 py-8 min-h-screen flex items-center justify-center'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl'>
+          <div className='background-blur-xl bg-black/20 border-white/10 p-8 rounded-2xl shadow-2xl'>
+            <div text-center space-y-8>
+              <div className=' flex items-center justify-center gap-2'>
+                {isBreak ? <FaCoffee className='w-6 h-6'/> : <FaBrain className='w-6 h-6'/>}
+                <h1>
+                  {isBreak? "BREAK TIME" : "FOCUS MODE"}
+                </h1>
+              </div>
+               <p className='font-mono text-sm'>
+                  Sessions completed: <span>{sessions}</span>
+               </p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   )
