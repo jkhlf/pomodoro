@@ -106,6 +106,23 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                   Sessions completed: <span>{sessions}</span>
                </p>
             </div>
+
+              <div className='spacey-4'>
+                <div>{formatTime(timeLeft)}</div>
+                <div className='w-full bg-white/10 rounded-full h-2 overflow-hidden'>
+                  <div className={`h-full transition-all duration-1000 ${isBreak ? "bg-orange-400" : "bg-green-400"}`}
+                  style={{width: `${(((isBreak ? 5 * 60 : 25 * 60) - timeLeft) / (isBreak ? 5 * 60 : 25 * 60)) * 100}`}}>
+
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <button onClick={toggleTimer} className={`font-mono px-8 py-4 text-lg rounded-xl transition-all
+                  ${isRunning ? "bg-red" : "bg-green"} backdrop-blur-sm border border-white/20`}>
+                  {isRunning ? "Pause" : "Start"}
+                </button>
+              </div>
           </div>
         </div>
       </div>
