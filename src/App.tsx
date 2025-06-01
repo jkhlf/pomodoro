@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FaBrain, FaCoffee, FaPause, FaPlay, FaTrash } from 'react-icons/fa';
+import { FaBrain, FaCoffee, FaPause, FaPlay, FaPlus, FaTrash } from 'react-icons/fa';
 import { FaRotate } from 'react-icons/fa6';
 
 
@@ -9,8 +9,7 @@ type Todo = {
   completed: boolean;
 }
 
-//not using shadcn
-const Button = ({ onClick, children, ...props }: any) => <button onClick={onClick} {...props}>{children}</button>;
+//not using external libs
 const Checkbox = ({ checked, onCheckedChange, ...props }: any) => <input type="checkbox" checked={checked} onChange={onCheckedChange} {...props} />;
 
 export const App = () => {
@@ -112,17 +111,17 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
       <div className='relative z-10 container mx-auto px-4 py-8 min-h-screen flex items-center justify-center'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl'>
           <div className='backdrop-blur-xl bg-black/20 border-white/10 p-8 rounded-2xl shadow-2xl'>
-            <div text-center space-y-8>
-              <div className='flex items-center justify-center gap-2 text-green-400'>
-                {isBreak ? <FaCoffee className='w-6 h-6'/> : <FaBrain className='w-6 h-6'/>}
-                <h1>
-                  {isBreak? "BREAK TIME" : "FOCUS MODE"}
-                </h1>
+            <div className="text-center space-y-8">
+              <div className="space-y-2">
+                <div className="flex items-center justify-center gap-2 text-green-400">
+                  {isBreak ? <FaCoffee className="w-6 h-6" /> : <FaBrain className="w-6 h-6" />}
+                  <h1 className="text-2xl font-mono font-bold">{isBreak ? "// BREAK TIME" : "// FOCUS MODE"}</h1>
+                </div>
+                <p className="text-gray-400 font-mono text-sm">
+                  Sessions completed: <span className="text-cyan-400">{sessions}</span>
+                </p>
+                </div>
               </div>
-               <p className='font-mono text-sm'>
-                  Sessions completed: <span>{sessions}</span>
-               </p>
-            </div>
 
                <div className="space-y-4">
                 <div className="text-8xl font-mono font-bold text-white tracking-wider">{formatTime(timeLeft)}</div>
@@ -157,35 +156,48 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
           </div>
         </div>
 
-        <div className='backdrop-blur-xl bg-black/20 border-white/10 p-8 rounded-2xl shadow-2xl'>
-              <div className='space-y-6'>
-                      <h2 className='text-2xl font-mono'> ToDo </h2>
-                      <p> Progess: {""}
-                      <span>{completedTodos}/{todos.length}</span>{""}
-                      tasks completed
-                      </p>
+        <div className="backdrop-blur-xl bg-black/20 border-white/10 p-8 rounded-2xl shadow-2xl">
+            <div className="space-y-6">
+              {/* Header */}
+              <div className="space-y-2">
+                <h2 className="text-2xl font-mono font-bold text-white">// TODO.md</h2>
+                <p className="text-gray-400 font-mono text-sm">
+                  Progress:{" "}
+                  <span className="text-cyan-400">
+                    {completedTodos}/{todos.length}
+                  </span>{" "}
+                  tasks completed
+                </p>
               </div>
 
-               <div className='flex gap-2'>
-                <input value={newTodo}
-                onChange={(e) => setNewTodo(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addTodo()}
-                placeholder='$ add new task'
-                className='font-mono bg-white/10 border-white/20 text-white placeholder:text-gray-400 rounded-xl'/>
-
+              {/* Add Todo */}
+              <div className="flex gap-2">
+                <input
+                  value={newTodo}
+                  onChange={(e) => setNewTodo(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && addTodo()}
+                  placeholder="$ add new task..."
+                  className="font-mono bg-white/10 border-white/20 text-white placeholder:text-gray-400 rounded-xl backdrop-blur-sm"
+                />
                 <button
-                onClick={addTodo}
-                className='bg-blue-500/80 hover:bg-blue-600 rounded-xl '>
-                  <FaPlay className='w-5 h-5 mr-2'/>
+                  onClick={addTodo}
+                  className="bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl backdrop-blur-sm border border-white/20"
+                >
+                  <FaPlus className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className='w-full bg-white/10 rounded-full h-2'>
-                  <div className='h-full '  style= {{width: `${todos.length > 0 ?(completedTodos / todos.length) * 100 : 0}%`}}>
-
-                  </div>
+              {/* Progress Bar */}
+              <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-cyan-400 to-blue-400 transition-all duration-500"
+                  style={{
+                    width: `${todos.length > 0 ? (completedTodos / todos.length) * 100 : 0}%`,
+                  }}
+                />
               </div>
-                <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+
+              <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
                 {todos.map((todo) => (
                   <div
                     key={todo.id}
@@ -208,14 +220,12 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                       {todo.completed ? "✓ " : "○ "}
                       {todo.text}
                     </span>
-                    <Button
+                    <button
                       onClick={() => deleteTodo(todo.id)}
-                      variant="ghost"
-                      size="icon"
                       className="text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg"
                     >
                       <FaTrash className="w-4 h-4" />
-                    </Button>
+                    </button>
                   </div>
                 ))}
 
@@ -226,7 +236,8 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                   </div>
                 )}
               </div>
-        </div>
+            </div>
+          </div>
       </div>
     </main>
   )
