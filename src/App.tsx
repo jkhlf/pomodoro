@@ -158,7 +158,6 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
 
         <div className="backdrop-blur-xl bg-black/20 border-white/10 p-8 rounded-2xl shadow-2xl">
             <div className="space-y-6">
-              {/* Header */}
               <div className="space-y-2">
                 <h2 className="text-2xl font-mono font-bold text-white">// TODO.md</h2>
                 <p className="text-gray-400 font-mono text-sm">
@@ -170,24 +169,22 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                 </p>
               </div>
 
-              {/* Add Todo */}
               <div className="flex gap-2">
                 <input
                   value={newTodo}
                   onChange={(e) => setNewTodo(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addTodo()}
                   placeholder="$ add new task..."
-                  className="font-mono bg-white/10 border-white/20 text-white placeholder:text-gray-400 rounded-xl backdrop-blur-sm"
+                  className="p-2 font-mono bg-white/10 border-white/20 text-white placeholder:text-gray-400 rounded-xl backdrop-blur-sm"
                 />
                 <button
                   onClick={addTodo}
-                  className="bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl backdrop-blur-sm border border-white/20"
+                  className="bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl backdrop-blur-sm border border-white/20 p-1"
                 >
                   <FaPlus className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Progress Bar */}
               <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-cyan-400 to-blue-400 transition-all duration-500"
