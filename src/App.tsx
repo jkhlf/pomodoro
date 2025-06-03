@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { FaBrain, FaCoffee, FaPause, FaPlay, FaPlus, FaTrash } from 'react-icons/fa';
-import { FaRotate } from 'react-icons/fa6';
+import { FaBrain, FaCoffee, FaMusic, FaPause, FaPlay, FaPlus, FaTrash, FaVolumeDown } from 'react-icons/fa';
+import { FaRotate, FaVolumeHigh } from 'react-icons/fa6';
 
 
 type Todo = {
@@ -25,6 +25,8 @@ export const App = () => {
   const [newTodo, setNewTodo] = useState("");
   const [sessions, setSessions] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [coffeeCcount, setCoffeeCount] = useState(0);
+  const [showMusic, setShowMusic] = useState(false);
 
 
 
@@ -97,6 +99,14 @@ const deleteTodo = (id: number) => {
 }
 
 const completedTodos = todos.filter((todo) => todo.completed).length;
+
+  const incrementCoffee = () => {
+    setCoffeeCount((prev) => prev + 1)
+  }
+
+  const decrementCoffee = () => {
+    setCoffeeCount((prev) => (prev > 0 ? prev - 1 : 0))
+  }
 
   return (
     <main className='min-h-screen relative overflow-hidden bg-gradient-to-br from-purple-900'>
@@ -235,6 +245,45 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
               </div>
             </div>
           </div>
+ <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto">
+          {/* Music Player */}
+          <div className="backdrop-blur-xl bg-black/20 border-white/10 p-6 rounded-2xl shadow-2xl lg:col-span-2">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-mono text-lg text-purple-400 flex items-center gap-2">
+                  <FaMusic className="w-5 h-5" />
+                  // MUSIC PLAYER
+                </h3>
+                <button
+                  onClick={() => setShowMusic(!showMusic)}
+                  className="text-white hover:bg-white/10 rounded-lg font-mono"
+                >
+                  {showMusic ? <FaVolumeHigh className="w-4 h-4 mr-2" /> : <FaVolumeDown className="w-4 h-4 mr-2" />}
+                  {showMusic ? "HIDE" : "SHOW"}
+                </button>
+              </div>
+
+              {showMusic ? (
+                <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/"
+                    title="YouTube music playlist"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              ) : (
+                <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10 bg-black/40 flex items-center justify-center">
+                  <p className="text-gray-400 font-mono text-sm">Click SHOW to display the music player</p>
+                </div>
+              )}
+              <p className="text-xs text-gray-400 font-mono">Lofi beats to help you focus and be productive</p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   )
