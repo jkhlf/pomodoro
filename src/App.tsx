@@ -1,22 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { FaBrain, FaCoffee, FaMinus, FaMusic, FaPause, FaPlay, FaPlus, FaTrash, FaVolumeDown } from 'react-icons/fa';
-import { FaRotate, FaVolumeHigh } from 'react-icons/fa6';
-
-
-type Todo = {
-  id: number;
-  text: string;
-  completed: boolean;
-}
-
-//not using external libs
-const Checkbox = ({ checked, onCheckedChange, ...props }: any) => <input type="checkbox" checked={checked} onChange={onCheckedChange} {...props} />;
+import { FaBrain, FaCoffee, FaPause, FaPlay, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaRotate } from 'react-icons/fa6';
+import { CoffeeTracker } from './components/CoffeTracker';
+import { MusicPlayer } from './components/MusicPlayer';
+import { Checkbox } from './components/ui/Checkbox';
+import type { Todo } from './types/Todo';
 
 export const App = () => {
-
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const [isBreak, setIsBreak]= useState(false);
+  const [isBreak, setIsBreak] = useState(false);
   const [todos, setTodos] = useState<Todo[]>([
     { id: 1, text: "Learn React", completed: false },
     { id: 2, text: "Learn TypeScript", completed: false },
@@ -25,120 +18,107 @@ export const App = () => {
   const [newTodo, setNewTodo] = useState("");
   const [sessions, setSessions] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [coffeeCount, setCoffeeCount] = useState(0);
-  const [showMusic, setShowMusic] = useState(false);
-
-
 
   useEffect(() => {
-    if( isRunning && timeLeft > 0) {
-      intervalRef.current = setInterval (() => {
+    if (isRunning && timeLeft > 0) {
+      intervalRef.current = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000)
     } else if (timeLeft === 0) {
-    setIsRunning(false)
-      if (!isBreak){
-        setSessions((prev) => prev + 1 );
+      setIsRunning(false)
+      if (!isBreak) {
+        setSessions((prev) => prev + 1);
         setIsBreak(true);
         setTimeLeft(5 * 60);
       } else {
         setIsBreak(false);
         setTimeLeft(25 * 60);
       }
-  } else {
-    if(intervalRef.current){
-      clearInterval(intervalRef.current);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
+  }, [isRunning, timeLeft, isBreak]);
+
+  const toggleTimer = () => {
+    setIsRunning(!isRunning);
+  }
+
+  const resetTimer = () => {
+    setIsRunning(false);
+    setIsBreak(false);
+    setTimeLeft(25 * 60);
+  }
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+  }
+
+  const addTodo = () => {
+    if (newTodo.trim()) {
+      setTodos([
+        ...todos, {
+          id: Date.now(),
+          text: newTodo.trim(),
+          completed: false
+        },
+      ])
+      setNewTodo("");
     }
   }
 
-  return () => {
-    if(intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-  }
-}, [isRunning, timeLeft, isBreak]);
-
-const toggleTimer = () => {
-  setIsRunning(!isRunning);
-}
-
-const resetTimer = () => {
-  setIsRunning(false);
-  setIsBreak(false);
-  setTimeLeft(25 * 60);
-}
-
-const formatTime = (seconds: number) => {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2,"0")}`
-}
-
-const addTodo = () => {
-  if (newTodo.trim()) {
-    setTodos([
-      ...todos,{
-        id: Date.now(),
-        text: newTodo.trim(),
-        completed: false
-      },
-    ])
-    setNewTodo("");
-  }
-}
-
-const toggleTodo = (id: number) => {
-  setTodos(todos.map((todo) =>
-    (todo.id === id ?
-      { ... todo, completed: !todo.completed}
-      : todo)));
-}
-
-const deleteTodo = (id: number) => {
-  setTodos(todos.filter((todo) => todo.id !== id));
-}
-
-const completedTodos = todos.filter((todo) => todo.completed).length;
-
-  const incrementCoffee = () => {
-    setCoffeeCount((prev) => prev + 1)
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map((todo) =>
+      (todo.id === id ?
+        { ...todo, completed: !todo.completed }
+        : todo)));
   }
 
-  const decrementCoffee = () => {
-    setCoffeeCount((prev) => (prev > 0 ? prev - 1 : 0))
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
   }
+
+  const completedTodos = todos.filter((todo) => todo.completed).length;
+
 
   return (
-    <main className='min-h-screen relative overflow-hidden bg-gradient-to-br from-purple-900'>
-
-    <div
+    <main className='min-h-screen relative overflow-hidden bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900'>
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-80"
         style={{
           backgroundImage: `url('/bg.png')`,
         }}
       />
 
-      <div className='relative z-10 container mx-auto px-4 py-8 min-h-screen flex items-center justify-center grid grid-cols-1 lg:grid-cols-2'>
-        <div className=' gap-8 w-full max-w-6xl'>
-          <div className='backdrop-blur-xl bg-black/20 border-white/10 p-8 rounded-2xl shadow-2xl'>
-            <div className="text-center space-y-8">
+      <div className='relative z-10 container mx-auto px-4 py-8 min-h-screen'>
+        <div className='lg:grid lg:grid-cols-4 lg:grid-rows-2 gap-6 h-screen max-h-screen'>
+          <div className='lg:col-span-2 lg:row-span-2 backdrop-blur-xl bg-black/20 border border-white/10 p-8 rounded-2xl shadow-2xl'>
+            <div className="text-center space-y-8 h-full flex flex-col justify-center">
               <div className="space-y-2">
                 <div className="flex items-center justify-center gap-2 text-green-400">
-                  {isBreak ? <FaCoffee className="w-6 h-6" /> : <FaBrain className="w-6 h-6" />}
-                  <h1 className="text-2xl font-mono font-bold">{isBreak ? "// BREAK TIME" : "// FOCUS MODE"}</h1>
+                  {isBreak ? <FaCoffee className="w-8 h-8" /> : <FaBrain className="w-8 h-8" />}
+                  <h1 className="text-3xl font-mono font-bold">{isBreak ? "// BREAK TIME" : "// FOCUS MODE"}</h1>
                 </div>
-                <p className="text-gray-400 font-mono text-sm">
-                  Sessions completed: <span className="text-cyan-400">{sessions}</span>
+                <p className="text-gray-400 font-mono text-lg">
+                  Sessions completed: <span className="text-cyan-400 text-xl font-bold">{sessions}</span>
                 </p>
-                </div>
               </div>
 
-               <div className="space-y-4">
-                <div className="text-8xl font-mono font-bold text-white tracking-wider">{formatTime(timeLeft)}</div>
+              <div className="space-y-6">
+                <div className="text-4xl font-mono font-bold text-white tracking-wider drop-shadow-2xl">{formatTime(timeLeft)}</div>
 
-                <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
                   <div
-                    className={`h-full transition-all duration-1000 ${isBreak ? "bg-orange-400" : "bg-green-400"}`}
+                    className={`h-full transition-all duration-1000 ${isBreak ? "bg-gradient-to-r from-orange-400 to-red-400" : "bg-gradient-to-r from-green-400 to-emerald-400"}`}
                     style={{
                       width: `${(((isBreak ? 5 * 60 : 25 * 60) - timeLeft) / (isBreak ? 5 * 60 : 25 * 60)) * 100}%`,
                     }}
@@ -146,28 +126,32 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                 </div>
               </div>
 
-              <div className='flex items-center justify-start gap-4 mt-6'>
-                <button onClick={toggleTimer} className={`font-mono px-6 py-4 text-lg rounded-xl transition-all ${
+              <div className='flex items-center justify-center gap-6 mt-8'>
+                <button onClick={toggleTimer} className={`font-mono px-8 py-4 text-xl rounded-xl transition-all transform hover:scale-105 ${
                     isRunning
                       ? "bg-red-500/80 hover:bg-red-600/80 text-white"
                       : "bg-green-500/80 hover:bg-green-600/80 text-white"
-                  } backdrop-blur-sm border border-white/20`}
+                  } backdrop-blur-sm border border-white/20 shadow-lg flex items-center gap-3`}
                 >
                   {isRunning ? (
-                    <> <FaPause className='w-5 h-5 mr-2'/>  PAUSE </>) : (
-                    <> <FaPlay className='w-5 h-5 mr-2'/> START </>)}
+                    <> <FaPause className='w-6 h-6'/>  PAUSE </>) : (
+                    <> <FaPlay className='w-6 h-6'/> START </>)}
                 </button>
 
-                <button onClick={resetTimer} className='font-mono px-6 py-4 text-lg rounded-xl bg-white/20 backdrop-blur-sm'>
-                <FaRotate className='w-5 h-5 mr-2'/>
-                  Reset
+                <button onClick={resetTimer} className='font-mono px-8 py-4 text-xl rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/20 text-white transition-all transform hover:scale-105 shadow-lg flex items-center gap-3'>
+                  <FaRotate className='w-6 h-6'/>
+                  RESET
                 </button>
               </div>
+            </div>
           </div>
-        </div>
 
-        <div className="backdrop-blur-xl bg-black/20 border-white/10 p-8 rounded-2xl shadow-2xl">
-            <div className="space-y-6">
+         <CoffeeTracker />
+
+         <MusicPlayer />
+
+          <div className="lg:row-span-2 backdrop-blur-xl bg-black/20 border border-white/10 p-6 rounded-2xl shadow-2xl">
+            <div className="space-y-6 h-full flex flex-col">
               <div className="space-y-2">
                 <h2 className="text-2xl font-mono font-bold text-white">// TODO.md</h2>
                 <p className="text-gray-400 font-mono text-sm">
@@ -185,11 +169,11 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                   onChange={(e) => setNewTodo(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addTodo()}
                   placeholder="$ add new task..."
-                  className="p-2 font-mono bg-white/10 border-white/20 text-white placeholder:text-gray-400 rounded-xl backdrop-blur-sm"
+                  className="flex-1 p-3 font-mono bg-white/10 border border-white/20 text-white placeholder:text-gray-400 rounded-xl backdrop-blur-sm focus:bg-white/20 focus:border-white/40 outline-none transition-all"
                 />
                 <button
                   onClick={addTodo}
-                  className="bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl backdrop-blur-sm border border-white/20 p-1"
+                  className="bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-xl backdrop-blur-sm border border-white/20 px-4 transition-all transform hover:scale-105"
                 >
                   <FaPlus className="w-4 h-4" />
                 </button>
@@ -204,11 +188,11 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                 />
               </div>
 
-              <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+              <div className="space-y-3 flex-1 overflow-y-auto pr-2" style={{scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.3) transparent'}}>
                 {todos.map((todo) => (
                   <div
                     key={todo.id}
-                    className={`flex items-center gap-3 p-4 rounded-xl transition-all ${
+                    className={`flex items-center gap-3 p-4 rounded-xl transition-all transform hover:scale-[1.02] ${
                       todo.completed
                         ? "bg-green-500/10 border border-green-500/20"
                         : "bg-white/5 border border-white/10 hover:bg-white/10"
@@ -217,7 +201,7 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                     <Checkbox
                       checked={todo.completed}
                       onCheckedChange={() => toggleTodo(todo.id)}
-                      className="border-white/30 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500"
+                      className="w-5 h-5 border-2 border-white/30 rounded accent-green-500"
                     />
                     <span
                       className={`flex-1 font-mono text-sm ${
@@ -229,7 +213,7 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                     </span>
                     <button
                       onClick={() => deleteTodo(todo.id)}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg"
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg p-2 transition-all"
                     >
                       <FaTrash className="w-4 h-4" />
                     </button>
@@ -245,65 +229,6 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
               </div>
             </div>
           </div>
-
-
-          <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 w-full max-w-6xl mx-auto">
-          <div className="backdrop-blur-xl bg-black/20 border-white/10 p-6 rounded-2xl shadow-2xl lg:col-span-2">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-mono text-lg text-purple-400 flex items-center gap-2">
-                  <FaMusic className="w-5 h-5" />
-                  // MUSIC PLAYER
-                </h3>
-                <button
-                  onClick={() => setShowMusic(!showMusic)}
-                  className="text-white hover:bg-white/10 rounded-lg font-mono"
-                >
-                  {showMusic ? <FaVolumeHigh className="w-4 h-4 mr-2" /> : <FaVolumeDown className="w-4 h-4 mr-2" />}
-                  {showMusic ? "HIDE" : "SHOW"}
-                </button>
-              </div>
-
-              {showMusic ? (
-                <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10">
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube.com/embed/jfKfPfyJRdk"
-                    title="YouTube music playlist"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-
-                </div>
-              ) : (
-                <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10 bg-black/40 flex items-center justify-center">
-                  <p className="text-gray-400 font-mono text-sm">Click SHOW to display the music player</p>
-                </div>
-              )}
-              <p className="text-xs text-gray-400 font-mono">Lofi beats to help you focus and be productive</p>
-            </div>
-          </div>
-        </div>
-
-        <div className='bg-black/30 backdrop-blur-md p-4 rounded-xl border border-white/10'>
-              <h3><FaCoffee className='h-5 w-5'/> Coffee Tracker</h3>
-              <div className='flex items-center justify-center gap-4'>
-                <button onClick={decrementCoffee} className='rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20'>
-                <FaMinus className='h-5 w-5'/>
-                </button>
-
-                 <div className="flex items-center gap-2">
-                    {[...Array(coffeeCount)].map((_, i) => (
-                      <FaCoffee key={i} className="w-6 h-6 text-amber-400" />
-                    ))}
-                    {coffeeCount === 0 && <span className="text-gray-400 font-mono text-sm">No coffee yet</span>}
-                  </div>
-                     <button onClick={incrementCoffee} className='rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20'>
-                <FaPlus className='h-5 w-5'/>
-                </button>
-                    {coffeeCount > 0 && (<p> You've had {coffeeCount} cup {coffeeCount !== 1 ? "s" : ""} of coffee today</p>)}
-              </div>
         </div>
       </div>
     </main>
@@ -311,5 +236,3 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
 }
 
 export default App;
-
-
