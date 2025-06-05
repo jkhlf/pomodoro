@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FaBrain, FaCoffee, FaMusic, FaPause, FaPlay, FaPlus, FaTrash, FaVolumeDown } from 'react-icons/fa';
+import { FaBrain, FaCoffee, FaMinus, FaMusic, FaPause, FaPlay, FaPlus, FaTrash, FaVolumeDown } from 'react-icons/fa';
 import { FaRotate, FaVolumeHigh } from 'react-icons/fa6';
 
 
@@ -25,7 +25,7 @@ export const App = () => {
   const [newTodo, setNewTodo] = useState("");
   const [sessions, setSessions] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [coffeeCcount, setCoffeeCount] = useState(0);
+  const [coffeeCount, setCoffeeCount] = useState(0);
   const [showMusic, setShowMusic] = useState(false);
 
 
@@ -118,8 +118,8 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
         }}
       />
 
-      <div className='relative z-10 container mx-auto px-4 py-8 min-h-screen flex items-center justify-center'>
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl'>
+      <div className='relative z-10 container mx-auto px-4 py-8 min-h-screen flex items-center justify-center grid grid-cols-1 lg:grid-cols-2'>
+        <div className=' gap-8 w-full max-w-6xl'>
           <div className='backdrop-blur-xl bg-black/20 border-white/10 p-8 rounded-2xl shadow-2xl'>
             <div className="text-center space-y-8">
               <div className="space-y-2">
@@ -245,8 +245,9 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
               </div>
             </div>
           </div>
- <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto">
-          {/* Music Player */}
+
+
+          <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 w-full max-w-6xl mx-auto">
           <div className="backdrop-blur-xl bg-black/20 border-white/10 p-6 rounded-2xl shadow-2xl lg:col-span-2">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -268,11 +269,12 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
                   <iframe
                     width="100%"
                     height="100%"
-                    src="https://www.youtube.com/"
+                    src="https://www.youtube.com/embed/jfKfPfyJRdk"
                     title="YouTube music playlist"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   ></iframe>
+
                 </div>
               ) : (
                 <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10 bg-black/40 flex items-center justify-center">
@@ -284,6 +286,25 @@ const completedTodos = todos.filter((todo) => todo.completed).length;
           </div>
         </div>
 
+        <div className='bg-black/30 backdrop-blur-md p-4 rounded-xl border border-white/10'>
+              <h3><FaCoffee className='h-5 w-5'/> Coffee Tracker</h3>
+              <div className='flex items-center justify-center gap-4'>
+                <button onClick={decrementCoffee} className='rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20'>
+                <FaMinus className='h-5 w-5'/>
+                </button>
+
+                 <div className="flex items-center gap-2">
+                    {[...Array(coffeeCount)].map((_, i) => (
+                      <FaCoffee key={i} className="w-6 h-6 text-amber-400" />
+                    ))}
+                    {coffeeCount === 0 && <span className="text-gray-400 font-mono text-sm">No coffee yet</span>}
+                  </div>
+                     <button onClick={incrementCoffee} className='rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20'>
+                <FaPlus className='h-5 w-5'/>
+                </button>
+                    {coffeeCount > 0 && (<p> You've had {coffeeCount} cup {coffeeCount !== 1 ? "s" : ""} of coffee today</p>)}
+              </div>
+        </div>
       </div>
     </main>
   )
