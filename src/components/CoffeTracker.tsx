@@ -8,20 +8,18 @@ export const CoffeeTracker = () => {
   const decrement = () => setCoffeeCount (prev => prev > 0 ? prev - 1: 0);
 
 return (
-     <div className='backdrop-blur-xl bg-black/20 border border-white/10 p-6 rounded-2xl shadow-2xl'>
-                <div className="space-y-4">
-                  <h3 className="font-mono text-xl text-amber-400 flex items-center gap-2">
-                    <FaCoffee className='h-6 w-6'/>
+     <div className='backdrop-blur-xl bg-black/20 border border-white/10 p-4 rounded-2xl shadow-2xl'>
+                <div className="space-y-3">
+                  <h3 className="font-mono text-sm text-amber-400 flex items-center gap-2">
+                    <FaCoffee className='h-4 w-4'/>
                     COFFEE TRACKER
                   </h3>
-                  <div className='flex flex-col items-center gap-4'>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between">
                       <button onClick={decrement} className='w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all flex items-center justify-center'>
-                        <FaMinus className='h-5 w-5'/>
+                        <FaMinus className='h-3 w-3'/>
                       </button>
 
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="flex items-center gap-1 flex-wrap justify-center">
+                        <div className="flex items-center gap-1">
                           {[...Array(Math.min(coffeeCount, 5))].map((_, i) => (
                             <FaCoffee key={i} className="w-8 h-8 text-amber-400" />
                           ))}
@@ -36,11 +34,9 @@ return (
                       </div>
 
                       <button onClick={increment} className='w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all flex items-center justify-center'>
-                        <FaPlus className='h-5 w-5'/>
+                        <FaPlus className='h-3 w-3'/>
                       </button>
                     </div>
-                  </div>
-                </div>
               </div>
   );
 };

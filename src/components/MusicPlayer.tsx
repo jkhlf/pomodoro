@@ -8,10 +8,10 @@ export const MusicPlayer = () => {
 
   return (
           <div className="backdrop-blur-xl bg-black/20 border border-white/10 p-6 rounded-2xl shadow-2xl">
-               <div className="space-y-4">
+               <div className="space-y-3">
                  <div className="flex items-center justify-between">
                    <h3 className="font-mono text-xl text-purple-400 flex items-center gap-2">
-                     <FaMusic className="w-6 h-6" />
+                     <FaMusic className="w-4 h-4" />
                      // MUSIC PLAYER
                    </h3>
                    <button
@@ -24,7 +24,7 @@ export const MusicPlayer = () => {
                  </div>
 
                  {showMusic ? (
-                   <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10">
+                   <div className="aspect-video w-full rounded-lg overflow-hidden border border-white/10">
                      <iframe
                        width="100%"
                        height="100%"
@@ -35,7 +35,7 @@ export const MusicPlayer = () => {
                      ></iframe>
                    </div>
                  ) : (
-                   <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10 bg-black/40 flex items-center justify-center">
+                   <div className="aspect-video w-full rounded-lg overflow-hidden border border-white/10 bg-black/40 flex items-center justify-center">
                      <p className="text-gray-400 font-mono text-sm">Click SHOW to display the music player</p>
                    </div>
                  )}

@@ -4,7 +4,7 @@ import { FaRotate } from 'react-icons/fa6';
 import { CoffeeTracker } from './components/CoffeTracker';
 import { MusicPlayer } from './components/MusicPlayer';
 import { Checkbox } from './components/ui/Checkbox';
-import type { Todo } from './types/Todo';
+import type { Todo } from './types';
 
 export const App = () => {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
