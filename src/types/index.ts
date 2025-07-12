@@ -6,7 +6,7 @@ export interface Todo {
 
 export interface PomodoroConfig {
   workDuration: number;
-  shorBreakDuration: number;
+  shortBreakDuration: number;
   longBreakDuration: number;
   sessionsUntilLongBreak: number;
   autoStartBreak: boolean;
@@ -15,7 +15,9 @@ export interface PomodoroConfig {
 }
 
 export interface BackgroundImage{
-  id: number;
+  id: string;
   url:string;
   name: string;
 }
+
+

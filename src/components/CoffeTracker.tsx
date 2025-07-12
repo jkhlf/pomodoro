@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { FaCoffee, FaMinus, FaPlus } from "react-icons/fa";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 export const CoffeeTracker = () => {
-  const [coffeeCount, setCoffeeCount] = useState(0);
+  const [coffeeCount, setCoffeeCount] = useLocalStorage('coffeeCount', 0);
 
   const increment = () => setCoffeeCount(prev => prev + 1);
   const decrement = () => setCoffeeCount (prev => prev > 0 ? prev - 1: 0);
