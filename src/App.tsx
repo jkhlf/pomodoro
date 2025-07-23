@@ -43,10 +43,10 @@ function App() {
 
   return (
     <main
-      className="min-h-screen bg-cover bg-center transition-all duration-1000 text-white"
+      className="min-h-screen bg-cover bg-center transition-all duration-700 text-white"
       style={{ backgroundImage: `url(${currentBg.url})` }}
     >
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-xs" />
 
       <div className="relative z-10 container mx-auto p-4 md:p-6 min-h-screen">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 h-full">
@@ -73,9 +73,9 @@ function App() {
           </div>
         </div>
       </div>
-      
+
   <BackgroundSelector
-        className="absolute bottom-6 right-6 z-20" // Posicionamento fixo
+        className="absolute bottom-6 right-6 z-20"
         images={backgroundImages}
         selected={currentBg}
         onSelect={setCurrentBg}

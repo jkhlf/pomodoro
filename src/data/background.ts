@@ -13,12 +13,17 @@ export const backgroundImages: BackgroundImage[] = [
   },
   {
     id: "3",
-    url: "https://w.wallhaven.cc/full/e7/wallhaven-e787j8.png",
+    url: "https://w.wallhaven.cc/full/kx/wallhaven-kxv8d7.png",
     name: "Retro",
   },
   {
     id: "4",
-    url: "https://w.wallhaven.cc/full/zp/wallhaven-zpx7lv.jpg",
+    url: "https://w.wallhaven.cc/full/m3/wallhaven-m31l2y.jpg",
+    name: "Jinx and Vi",
+  },
+   {
+    id: "5",
+    url: "  https://w.wallhaven.cc/full/g7/wallhaven-g7z7gd.jpg",
     name: "Jinx and Vi",
   }
 ];

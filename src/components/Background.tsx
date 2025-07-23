@@ -5,7 +5,7 @@ interface BackgroundSelectorProps {
     images: BackgroundImage[];
     selected: BackgroundImage;
     onSelect: (image: BackgroundImage) => void;
-    className?: string; // Adicionar esta linha
+    className?: string;
 }
 
 export function BackgroundSelector({ images, selected, onSelect, className = '' }: BackgroundSelectorProps) {
@@ -19,7 +19,7 @@ export function BackgroundSelector({ images, selected, onSelect, className = '' 
     return (
         <button
             onClick={handleSelectNext}
-            className={`p-3 bg-black/30 rounded-full text-white/80 hover:bg-black/50 transition-colors ${className}`} // Aplicar a classe aqui
+            className={`p-3 bg-black/30 rounded-full text-white/80 hover:bg-black/50 transition-colors ${className}`} 
             aria-label="Change background"
         >
             <FaImage size={20} />
